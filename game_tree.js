@@ -1,39 +1,41 @@
 let PrefixTreeNode = class{
-    constructor(strings=None){
+    constructor(strings){
+        strings = null
         this.character = character
         this.children = PrefixTreeNode.CHILDREN_TYPE()
         this.terminal = False
-
-    function is_terminal(character=None){
+    }
+    is_terminal(){
+        character = null
         if (self.terminal != null){
-            return True
+            return true
         }else{
-            return False
+            return false
         }
     }
-    function num_children(){
+    num_children(){
         var count = 0
         for (i=0;i<self.children;i++){
             count += 1
         }
         return count
     }
-    function has_child(character){
+   has_child(character){
         if (this.children.includes(character)){
-            return True
+            return true
         }else{
-            return False
+            return false
         }
     }
-    function get_child(character){
+    get_child(character){
         if (this.has_child(character)){
-            return self.children[character]
+            return this.children[character]
         }else{
             throw 'No child exists for character {character!r}'
         }
     }
 
-    function add_child(character, child_node){
+    add_child(character, child_node){
         if (this.has_child(character) == false){
             this.children[character] = child_node
             
@@ -43,6 +45,7 @@ let PrefixTreeNode = class{
     }
 }
 
+var test = PrefixTreeNode()
 
 
 let PrefixTree = class{
@@ -58,9 +61,9 @@ let PrefixTree = class{
         }
     }
 
-    var models = ["Kicks", "Rogue Sport", "Rogue", "Murano", "Pathfinder", "Armada", "Ariya", "GTR"]
+    //this.models = ["Kicks", "Rogue Sport", "Rogue", "Murano", "Pathfinder", "Armada", "Ariya", "GTR"]
 
-    function insert(this, string){
+    insert(this, string){
         //Insert the given string into this prefix tree.
         //start traversing down the trie
         node = this.root
