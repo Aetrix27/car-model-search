@@ -1,14 +1,14 @@
+//import * from './home.html';
+
 let PrefixTreeNode = class{
 
-    constructor(strings, character=null){
-        strings = null
+    constructor(character=null){
         this.character = character
         this.children = {}
         this.terminal = false
     }
     is_terminal(){
-        character = null
-        if (this.terminal != null){
+        if (this.terminal == true){
             return true
         }else{
             return false
@@ -16,13 +16,13 @@ let PrefixTreeNode = class{
     }
     num_children(){
         var count = 0
-        for (i=0;i<this.children;i++){
+        for (let i=0; i<this.children; i++){
             count += 1
         }
         return count
     }
    has_child(character){
-        if (this.children.includes(character)){
+        if (character in this.children){
             return true
         }else{
             return false
@@ -32,7 +32,7 @@ let PrefixTreeNode = class{
         if (this.has_child(character)){
             return this.children[character]
         }else{
-            throw 'No child exists for character {character!r}'
+            return 'No child exists for character {character!r}'
         }
     }
 
@@ -41,23 +41,19 @@ let PrefixTreeNode = class{
             this.children[character] = child_node
             
         }else{
-            throw 'No child exists for character {character!r}'
+            return 'No child exists for character {character!r}'
         }
     }
 }
 
-var test = new PrefixTreeNode()
-
 
 let PrefixTree = class{
 
-    START_CHARACTER = ''
-
     constructor(strings=null){
-        this.root = new PrefixTreeNode(PrefixTree.START_CHARACTER)
+        this.root = new PrefixTreeNode('')
         this.size = 0
         if(strings != null){
-            for (string=0;string++;string<=strings.length){
+            for (let string=0; string< strings.length; string++){
                 this.insert(strings[string])
             }
         }
@@ -68,51 +64,41 @@ let PrefixTree = class{
     insert(string){
         //Insert the given string into this prefix tree.
         //start traversing down the trie
-        node = this.root
-        for (character in string){
-            first_node = this.root.children[first_char]
-            if (node.has_child(character)){
-                node = node.get_child(character)
+        var node = this.root
+        for (let character=0;character < string.length; character++){
+            if (node.has_child(string[character])){
+                node = node.get_child(string[character])
             }else{
-                new_node = PrefixTreeNode(character)
-                node.add_child(character, new_node) 
+                var new_node = new PrefixTreeNode(string[character])
+                node.add_child(string[character], new_node) 
                 node = new_node
             }
         }
-        if (node.is_terminal() == null){
+        if (node.is_terminal() == false){
             this.size += 1
-            node.terminal = True
+            node.terminal = true
         }
 
     }
-    __init__(strings=None){
-        self.root = PrefixTreeNode(PrefixTree.START_CHARACTER)
-        self.size = 0
-        if (strings != null){
-            for (var string = 0; string<strings.length; string++){
-                self.insert(strings[string])
-            }
-        }
-    }
-    
-    __repr__(){
-        throw 'PrefixTree({self.strings()!r})'
+
+    string_repr(){
+        throw 'PrefixTree({this.strings()!r})'
     }
 
     is_empty(){
         if (this.size == 0){
-            return True
+            return true
         }else{
-            return False
+            return false
         }
     }
 
     contains(string){
 
-        node = self.root
-        for (char = 0; char<string.len; char++){
+        var node = this.root
+        for (let char = 0; char < string.length; char++){
             if (node.has_child(string[char])){
-                child = node.get_child(string[char])
+                var child = node.get_child(string[char])
                 node = child 
             }else{
                 return node.is_terminal()
@@ -121,31 +107,13 @@ let PrefixTree = class{
         return node.is_terminal() 
     }
         
-
-    insert(string){
-        node = self.root
-        for (character = 0; character<string.len;character++){
-            if (node.has_child(string[character])){
-                node = node.get_child(string[character])
-            }else{
-                new_node = PrefixTreeNode(string[character])
-                node.add_child(string[character], new_node) 
-                node = new_node
-            }
-        }
-        if (node.is_terminal() == null){
-            self.size += 1
-            node.terminal = True
-        }
-    }
-
     _find_node(string){
-        if (string.len == 0){
-            return 0, self.root
+        if (string.length == 0){
+            return 0, this.root
         }
-        node = this.root
-        depth = 0
-        for (character = 0; character<string.len; character++){
+        var node = this.root
+        var depth = 0
+        for (let character = 0; character<string.length; character++){
             if (node.has_child(string[character]) == true){
                 node = node.get_child(string[character])
                 depth += 1
@@ -154,7 +122,7 @@ let PrefixTree = class{
             }
         }
             
-        return depth, node
+        return [depth, node]
     }
             
 
@@ -163,9 +131,9 @@ let PrefixTree = class{
         if (prefix == ''){
             return this.strings()
         }
-        node = this._find_node(prefix)
+        var node = this._find_node(prefix)
         if (node[1].character != ''){
-            this._traverse(node[1], prefix, completions.append)
+            this._traverse(node[1], prefix, completions)
         }
         return completions
     }
@@ -174,83 +142,94 @@ let PrefixTree = class{
     strings(){
         var strings = []
     
-        this._traverse(this.root, '', strings.append)
+        this._traverse(this.root, '', strings)
         return strings
     }
 
 
-    _traverse(node, prefix, visit){
-        if (node.is_terminal()){
-            visit(prefix)
+    _traverse(node, prefix, strings){
+        if (node.is_terminal() == true){
+            console.log(prefix)
+            strings.push(prefix)
         }
         //node.children.keys
-        for (char =0; char<node.children.keys().length; char++){
-            child = node.get_child(char)
-            this._traverse(child, prefix + char, visit)
+        var nodes = Object.keys(node.children);
+        for (let char = 0; char < nodes.length; char++){
+            var child = node.get_child(nodes[char])
+            this._traverse(child, prefix + nodes[char], strings)
         }
     }
 
-
 }
 
-tongue_twisters = {
-    'Seashells': 'Shelly sells seashells by the sea shore'.split()
+const input = document.querySelector('input');
+const log = document.getElementById('cars');
+input.addEventListener('input', matchedPrefixes);
+    
+function matchedPrefixes(e) {
+    //if (e.target.value.length) >= 3:
+    tree = create_prefix_tree(e.target.value)
+    //completions = tree.complete(prefixes[prefix])
+    //console.log('complete' + completions)
+    log.textContent = tree.strings();
 }
-for (strings = 0; strings < tongue_twisters.values(); strings++){
-    console.log('{name} tongue-twister:')
-    create_prefix_tree(tongue_twisters.values()[strings])
 
-}
 
-function create_prefix_tree(strings){
-        
-    console.log('strings: {strings}')
+
+function create_prefix_tree(prefix){
+    //Show each string in trie as a list
 
     tree = new PrefixTree()
     console.log('\ntree: ' + tree)
     console.log('root:' + tree.root)
-    console.log('strings: {tree.strings()}')
+    console.log('strings:' + tree.strings())
 
     console.log('\nInserting strings:')
-    for (string = 0; string < string.length; string++){
-        tree.insert(strings[string])
-        console.log('insert({string!r}), size: {tree.size}')
-    }
+    //for (let string = 0; string < strings.length; string++){
+    //tree.insert(strings[string])
+    //tree.insert(prefix)
+    //console.log('insert'+tree.size)
+    //}
 
     console.log('\ntree: '+ tree)
     console.log('root:' + tree.root)
 
     console.log('\nSearching for strings in tree:')
-    sorted_str = new Set((strings).sort())
-    for (string = 0; string < sorted_str.length; string++){
-        result = tree.contains(string)
-        console.log('contains({string!r}): {result}')
-    }
+    sorted_str = strings.sort()
+    //for (let string = 0; string < sorted_str.length; string++){
 
-    console.log('\nSearching for strings not in tree:')
-    arr= []
-    for (string=0;string<strings.length;string++){
-        arr.append(string.slice(0,Math.floor(string.length/2)))
-    }
+    //result = tree.contains(sorted_str[string])
+    result = tree.contains(prefix)
+    console.log('contains' + result)
+    //}
 
-    prefixes = sorted(set(arr))
-    for (prefix=0; prefix<prefixes.length;prefix++){
-        if (prefixes[prefix].length == 0 || prefixes[prefix] in strings){
-            continue
-        }
-        result = tree.contains(prefixes[prefix])
-        console.log('contains({prefix!r}): {result}')
-    }
-
+    //console.log('\nSearching for strings not in tree:')
+    //arr= []
+    //for (let string=0;string<strings.length; string++){
+    //    arr.push(strings[string].slice(0,Math.floor(string.length/2)))
+    //}
+    //prefixes = arr.sort()
+    //for (let prefix=0; prefix<prefixes.length;prefix++){
+    //    if (prefixes[prefix].length == 0 || strings.includes(prefixes[prefix])){
+    //        continue
+    //    }
+    //    result = tree.contains(prefixes[prefix])
+    //    console.log('contains' + result)
+    //}
+    prefixes=['AB']
     console.log('\nCompleting prefixes in tree:')
-    for (prefix=0; prefix<prefixes.length;prefix++){
-        completions = tree.complete(prefix)
-        console.log('complete({prefix!r}): {completions}')
-    }
+    //for (let prefix=0; prefix<prefixes.length;prefix++){
+    completions = tree.complete(prefix)
+    console.log('complete' + completions)
+    //}
 
     console.log('\nRetrieving all strings:')
     retrieved_strings = tree.strings()
-    console.log('strings: {retrieved_strings}')
-    matches = set(retrieved_strings) == set(strings)
-    console.log('matches? {matches}')
+    console.log('retrieved strings: ' + retrieved_strings)
+    matches = retrieved_strings == strings
+    console.log('matches?' + matches)
+
+    return tree
 }
+var strings = ['ABC', 'ABD', 'A', 'XYZ']
+create_prefix_tree(strings)
