@@ -161,19 +161,49 @@ let PrefixTree = class{
     }
 
 }
+var tree = new PrefixTree()
 
 const input = document.querySelector('input');
 const log = document.getElementById('cars');
+const all = document.getElementById('allCars');
+var carsList = []
 input.addEventListener('input', matchedPrefixes);
     
-function matchedPrefixes(e) {
-    //if (e.target.value.length) >= 3:
-    tree = create_prefix_tree(e.target.value)
-    //completions = tree.complete(prefixes[prefix])
-    //console.log('complete' + completions)
-    log.textContent = tree.strings();
+function addToTrie(tree){
+    car = document.getElementById("car_input").value
+    console.log(car)
+    tree.insert(car)
+
+    //return tree
+
 }
 
+function matchedPrefixes(e) {
+    if (e.target.value.length >= 3){
+        //tree = create_prefix_tree(e.target.value)
+        //completions = tree.complete(prefixes[prefix])
+        //console.log('complete' + completions)
+        completions = tree.complete(e.target.value)
+        var outputStr = ''
+        for (let i = 0;i<completions.length;i++){
+            //outputStr += completions[i]
+            var elemLink = document.createElement('a');
+            elemLink.innerText = completions[i]
+            elemLink.onclick = function() { 
+                carsList.push(elemLink.innerText) 
+                all.innerHTML = carsList
+
+            };
+
+            //elemLink.setAttribute('href',"yourlink.htm");
+
+            log.appendChild(elemLink)
+        }
+  
+        console.log(completions)
+        
+    }   
+}
 
 
 function create_prefix_tree(prefix){
@@ -195,10 +225,11 @@ function create_prefix_tree(prefix){
     console.log('root:' + tree.root)
 
     console.log('\nSearching for strings in tree:')
-    sorted_str = strings.sort()
+    //sorted_str = strings.sort()
     //for (let string = 0; string < sorted_str.length; string++){
 
     //result = tree.contains(sorted_str[string])
+    //Check if its in string
     result = tree.contains(prefix)
     console.log('contains' + result)
     //}
@@ -216,7 +247,9 @@ function create_prefix_tree(prefix){
     //    result = tree.contains(prefixes[prefix])
     //    console.log('contains' + result)
     //}
-    prefixes=['AB']
+    //prefixes=['AB']
+
+    //Get all matching strings
     console.log('\nCompleting prefixes in tree:')
     //for (let prefix=0; prefix<prefixes.length;prefix++){
     completions = tree.complete(prefix)
@@ -231,5 +264,5 @@ function create_prefix_tree(prefix){
 
     return tree
 }
-var strings = ['ABC', 'ABD', 'A', 'XYZ']
-create_prefix_tree(strings)
+//var strings = ['ABC', 'ABD', 'A', 'XYZ']
+//create_prefix_tree(strings)
